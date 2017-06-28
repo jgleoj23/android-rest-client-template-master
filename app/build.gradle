@@ -1,0 +1,84 @@
+apply plugin: 'com.android.application'
+
+apply plugin: 'com.neenbedankt.android-apt'
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+    }
+}
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.3"
+
+    defaultConfig {
+        applicationId "com.codepath.apps.restclienttemplate"
+        minSdkVersion 17
+        targetSdkVersion 25
+    }
+
+    // Related to https://github.com/scribejava/scribejava/issues/480
+    // Scribe expects Java 7 or this custom Apache library
+    lintOptions {
+        lintConfig rootProject.file('gradle/lint.xml')
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+    }
+
+
+    packagingOptions {
+        exclude 'META-INF/NOTICE' // It is not include NOTICE file
+        exclude 'META-INF/LICENSE' // It is not include LICENSE file
+    }
+}
+
+repositories {
+    jcenter()
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+}
+
+def dbflow_version = "4.0.3"
+
+dependencies {
+    compile fileTree(dir: 'libs', include: '*.jar')
+    // Glide for remote image loading
+    // Android Async Http for sending async network requests
+    // DBFlow for simple persistence with an ORM
+    compile "com.github.Raizlabs.DBFlow:dbflow-core:${dbflow_version}"
+    compile "com.github.Raizlabs.DBFlow:dbflow:${dbflow_version}"
+    compile(
+            [group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.0.pr4'],
+            [group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.9.0.pr4'],
+            [group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.0.pr4']
+    )
+
+    compile 'com.codepath.libraries:android-oauth-handler:1.2.5'
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.github.bumptech.glide:glide:4.0.0-RC1'
+    compile 'com.loopj.android:android-async-http:1.4.9'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.android.support:recyclerview-v7:25.3.1'
+    compile 'com.android.support:support-v4:25.3.1'
+    compile 'com.jakewharton:butterknife:8.6.0'
+    compile 'com.google.dagger:dagger:2.11'
+    compile 'com.google.dagger:dagger-android:2.11'
+    compile group: 'io.reactivex.rxjava2', name: 'rxjava', version: '2.1.1'
+    compile group: 'io.reactivex.rxjava2', name: 'rxandroid', version: '2.0.1'
+
+    apt 'com.google.dagger:dagger-compiler:2.11'
+
+    provided 'javax.annotation:jsr250-api:1.0'
+
+    apt 'com.jakewharton:butterknife-compiler:8.6.0'
+    apt 'com.github.bumptech.glide:compiler:4.0.0-RC1'
+    apt "com.github.Raizlabs.DBFlow:dbflow-processor:${dbflow_version}"
+}

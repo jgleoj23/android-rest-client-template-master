@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.codepath.apps.restclienttemplate.TweetActivity">
+
+    <Button
+        android:id="@+id/btnCancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cancel"
+        tools:layout_editor_absoluteX="5dp"
+        tools:layout_editor_absoluteY="3dp" />
+
+    <Button
+        android:id="@+id/btnTweet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tweet"
+        tools:layout_editor_absoluteX="295dp"
+        tools:layout_editor_absoluteY="3dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignEnd="@+id/etStatus" />
+
+    <ImageView
+        android:id="@+id/ivProfilePhoto"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignStart="@+id/etStatus"
+        android:layout_below="@+id/btnCancel"
+        android:layout_marginTop="10dp"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        app:srcCompat="@android:color/black"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="69dp" />
+
+    <TextView
+        android:id="@+id/tvUsername"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/ivProfilePhoto"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="38dp"
+        android:layout_toEndOf="@+id/ivProfilePhoto"
+        android:text="user"
+        android:textAppearance="@android:style/TextAppearance.Material.Medium"
+        tools:layout_editor_absoluteX="138dp"
+        tools:layout_editor_absoluteY="103dp" />
+
+    <EditText
+        android:id="@+id/etStatus"
+        android:layout_width="362dp"
+        android:layout_height="322dp"
+        android:ems="10"
+        android:gravity="top"
+        android:hint="What's happening?"
+        android:inputType="textMultiLine"
+        tools:layout_editor_absoluteX="11dp"
+        tools:layout_editor_absoluteY="179dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+</RelativeLayout>
