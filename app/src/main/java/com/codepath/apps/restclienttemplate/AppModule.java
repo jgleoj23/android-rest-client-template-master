@@ -5,10 +5,14 @@ import android.content.Context;
 
 import com.codepath.apps.restclienttemplate.interactor.TwitterInteractor;
 
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import io.realm.Realm;
 
 /**
  * @author Joseph Gardi
@@ -39,14 +43,28 @@ public class AppModule {
 
     @Provides
     @Singleton
-    public TwitterInteractor newTi(TwitterClient client) {
-        return new TwitterInteractor(client);
+    public TwitterInteractor newTi(TwitterClient client, Context context, Realm realm, SimpleDateFormat twitterDateFormat) {
+        return new TwitterInteractor(client, context, realm, twitterDateFormat);
     }
 
 
     @Provides
     @Singleton
-    public TweetAdapter newAdapter(TwitterInteractor interactor) {
-        return new TweetAdapter(interactor);
+    public TweetAdapter newAdapter(TwitterInteractor interactor, SimpleDateFormat twitterDateFormat) {
+        return new TweetAdapter(interactor, twitterDateFormat);
+    }
+
+
+    @Provides
+    @Singleton
+    public Realm defaultInstance(Context context) {
+        Realm.init(context);
+        return Realm.getDefaultInstance();
+    }
+
+    @Provides
+    @Singleton
+    public SimpleDateFormat twitterDateFormat() {
+        return new SimpleDateFormat("EEE MMM dd HH:mm:ss ZZZZZ yyyy", Locale.ENGLISH);
     }
 }

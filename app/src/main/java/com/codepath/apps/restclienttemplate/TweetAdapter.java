@@ -12,11 +12,10 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.codepath.apps.restclienttemplate.interactor.TwitterInteractor;
 import com.codepath.apps.restclienttemplate.model.Tweet;
+import com.google.common.collect.Range;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.List;
-import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -32,15 +31,17 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
 
     private final String TAG = getClass().getName();
     private TwitterInteractor twitterInteractor;
+    SimpleDateFormat twitterDateFormat;
 
     @Inject
-    public TweetAdapter(TwitterInteractor twitterInteractor) {
+    public TweetAdapter(TwitterInteractor twitterInteractor, SimpleDateFormat twitterDateFormat) {
         this.twitterInteractor = twitterInteractor;
+        this.twitterDateFormat = twitterDateFormat;
 
-        twitterInteractor.getHomeTimeline().subscribe(new Consumer<List<Tweet>>() {
+        twitterInteractor.getHomeTimeline().subscribe(new Consumer<Range<Integer>>() {
             @Override
-            public void accept(@NonNull List<Tweet> tweets) throws Exception {
-                notifyDataSetChanged();
+            public void accept(@NonNull Range<Integer> range) throws Exception {
+                notifyItemRangeInserted( range.lowerEndpoint(), 1 + (range.upperEndpoint() - range.lowerEndpoint()) );
             }
         });
     }
@@ -68,7 +69,8 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
 
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        Context context;
+        private Context context;
+
         @BindView(R.id.ivProfileImage)
         ImageView ivProfileImage;
         @BindView(R.id.tvUsername)
@@ -93,18 +95,15 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             Glide.with(context)
                     .load(tweet.getUser().getProfileImageUrl())
                     .into(ivProfileImage);
-
             tvTime.setText(getRelativeTimeAgo(tweet.getCreatedAt()));
         }
 
-        public String getRelativeTimeAgo(String rawJsonDate) {
-            String twitterFormat = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
-            SimpleDateFormat sf = new SimpleDateFormat(twitterFormat, Locale.ENGLISH);
-            sf.setLenient(true);
+        public String getRelativeTimeAgo(String rawJsonDate) {;
+            twitterDateFormat.setLenient(true);
 
             String relativeDate = "";
             try {
-                long dateMillis = sf.parse(rawJsonDate).getTime();
+                long dateMillis = twitterDateFormat.parse(rawJsonDate).getTime();
                 relativeDate = DateUtils.getRelativeTimeSpanString(dateMillis,
                         System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS).toString();
             } catch (ParseException e) {

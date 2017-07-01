@@ -2,12 +2,15 @@ apply plugin: 'com.android.application'
 
 apply plugin: 'com.neenbedankt.android-apt'
 
+apply plugin: 'realm-android'
+
 buildscript {
     repositories {
         jcenter()
     }
     dependencies {
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+        classpath "io.realm:realm-gradle-plugin:3.4.0"
     }
 }
 
@@ -15,10 +18,12 @@ android {
     compileSdkVersion 25
     buildToolsVersion "25.0.3"
 
+
     defaultConfig {
         applicationId "com.codepath.apps.restclienttemplate"
         minSdkVersion 17
         targetSdkVersion 25
+        multiDexEnabled = true
     }
 
     // Related to https://github.com/scribejava/scribejava/issues/480
@@ -73,6 +78,10 @@ dependencies {
     compile 'com.google.dagger:dagger-android:2.11'
     compile group: 'io.reactivex.rxjava2', name: 'rxjava', version: '2.1.1'
     compile group: 'io.reactivex.rxjava2', name: 'rxandroid', version: '2.0.1'
+    compile 'com.google.guava:guava:22.0-android'
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.squareup.okhttp:okhttp:2.4.0'
+    compile 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.0.2'
 
     apt 'com.google.dagger:dagger-compiler:2.11'
 

@@ -4,15 +4,21 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
+import io.realm.RealmModel;
+import io.realm.annotations.PrimaryKey;
+import io.realm.annotations.RealmClass;
+
 /**
  * @author Joseph Gardi
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class Tweet {
+@RealmClass
+public class Tweet implements RealmModel {
 
+    @PrimaryKey
+    private long id;
     private String text;
-    private long uuid;
     private String createdAt;
     private User user;
 
@@ -36,12 +42,12 @@ public class Tweet {
         this.text = text;
     }
 
-    public long getUuid() {
-        return uuid;
+    public long getId() {
+        return id;
     }
 
-    public void setUuid(long uuid) {
-        this.uuid = uuid;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getCreatedAt() {
