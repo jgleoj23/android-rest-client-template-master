@@ -1,4 +1,4 @@
-package com.codepath.apps.restclienttemplate;
+package com.codepath.apps.restclienttemplate.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -7,9 +7,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.codepath.apps.restclienttemplate.interactor.TwitterInteractor;
+import com.codepath.apps.restclienttemplate.R;
+import com.codepath.apps.restclienttemplate.TwitterApplication;
+import com.codepath.apps.restclienttemplate.interactor.CurrentUserInteractor;
+import com.codepath.apps.restclienttemplate.interactor.PostTweetInteractor;
 import com.codepath.apps.restclienttemplate.model.User;
+import com.squareup.picasso.Picasso;
 
 import javax.inject.Inject;
 
@@ -19,6 +22,11 @@ import butterknife.OnClick;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
 
+/**
+ * Compose a new tweet
+ *
+ * @author Joseph Gardi
+ */
 public class TweetActivity extends AppCompatActivity {
 
     private final String TAG = getClass().getName();
@@ -30,7 +38,9 @@ public class TweetActivity extends AppCompatActivity {
     EditText etStatus;
 
     @Inject
-    TwitterInteractor twitterInteractor;
+    PostTweetInteractor postTweetInteractor;
+    @Inject
+    CurrentUserInteractor currentUserInteractor;
 
 
     @Override
@@ -48,10 +58,10 @@ public class TweetActivity extends AppCompatActivity {
         setContentView(R.layout.activity_tweet);
         ButterKnife.bind(this);
 
-        twitterInteractor.getUser().subscribe(new Consumer<User>() {
+        currentUserInteractor.getUser().subscribe(new Consumer<User>() {
             @Override
             public void accept(@NonNull User user) throws Exception {
-                Glide.with(getApplicationContext())
+                Picasso.with(getApplicationContext())
                         .load(user.getProfileImageUrl())
                         .into(ivProfilePhoto);
 
@@ -69,7 +79,7 @@ public class TweetActivity extends AppCompatActivity {
 
     @OnClick(R.id.btnTweet)
     public void sendAndGoBack() {
-        twitterInteractor.postTweet(etStatus.getText().toString())
+        postTweetInteractor.postTweet(etStatus.getText().toString())
                             .subscribe();
 
         finish();

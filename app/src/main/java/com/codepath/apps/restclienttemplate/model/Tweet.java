@@ -18,6 +18,7 @@ public class Tweet implements RealmModel {
 
     @PrimaryKey
     private long id;
+
     private String text;
     private String createdAt;
     private User user;

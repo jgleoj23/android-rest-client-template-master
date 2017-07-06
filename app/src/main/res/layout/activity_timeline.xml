@@ -4,15 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.codepath.apps.restclienttemplate.TimelineActivity">
+    tools:context="com.codepath.apps.restclienttemplate.activity.TimelineActivity">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rvTweets"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <fragment
+        android:id="@+id/fragment_timeline"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        class="com.codepath.apps.restclienttemplate.fragments.MentionsTimelineFragment"/>
 
 </android.support.constraint.ConstraintLayout>

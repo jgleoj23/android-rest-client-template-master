@@ -3,70 +3,62 @@ package com.codepath.apps.restclienttemplate;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.codepath.apps.restclienttemplate.interactor.TwitterInteractor;
+import com.codepath.apps.restclienttemplate.interactor.TimelineTweetsInteractor;
 import com.codepath.apps.restclienttemplate.model.Tweet;
-import com.google.common.collect.Range;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
+import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-import javax.inject.Inject;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.functions.Consumer;
 
 /**
+ * Creates the rows for the timeline
+ *
  * @author Joseph Gardi
  */
-public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> {
+public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder> {
 
     private final String TAG = getClass().getName();
-    private TwitterInteractor twitterInteractor;
-    SimpleDateFormat twitterDateFormat;
 
-    @Inject
-    public TweetAdapter(TwitterInteractor twitterInteractor, SimpleDateFormat twitterDateFormat) {
-        this.twitterInteractor = twitterInteractor;
+    private TimelineTweetsInteractor timelineTweetsInteractor;
+    private SimpleDateFormat twitterDateFormat;
+
+
+    public TweetsAdapter(final TimelineTweetsInteractor timelineTweetsInteractor, SimpleDateFormat twitterDateFormat) {
+        this.timelineTweetsInteractor = timelineTweetsInteractor;
         this.twitterDateFormat = twitterDateFormat;
-
-        twitterInteractor.getHomeTimeline().subscribe(new Consumer<Range<Integer>>() {
-            @Override
-            public void accept(@NonNull Range<Integer> range) throws Exception {
-                notifyItemRangeInserted( range.lowerEndpoint(), 1 + (range.upperEndpoint() - range.lowerEndpoint()) );
-            }
-        });
     }
 
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext())
-                                        .inflate(R.layout.item_tweet, parent, false);
-
-        return new ViewHolder(itemView);
+        return new ViewHolder(LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_tweet, parent, false));
     }
 
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.bind(twitterInteractor.getTweets().get(position));
+        holder.bind(timelineTweetsInteractor.getTweets().get(position));
     }
 
 
     @Override
     public int getItemCount() {
-        return twitterInteractor.getTweets().size();
-    }
 
+        return timelineTweetsInteractor.getTweets().size();
+    }
 
     class ViewHolder extends RecyclerView.ViewHolder {
         private Context context;
@@ -88,17 +80,35 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         }
 
 
-        public void bind(Tweet tweet) {
+        private void bind(Tweet tweet) {
+            Log.i(TAG, "binding " + tweet.getCreatedAt());
+
             tvUsername.setText(tweet.getUser().getName());
             tvBody.setText(tweet.getText());
 
-            Glide.with(context)
-                    .load(tweet.getUser().getProfileImageUrl())
-                    .into(ivProfileImage);
+            final String profileImageUrl = tweet.getUser().getProfileImageUrl();
+            Picasso.with(context)
+                    .load(profileImageUrl)
+                    .networkPolicy(NetworkPolicy.OFFLINE)
+                    .into(ivProfileImage, new Callback() {
+                        @Override
+                        public void onSuccess() {
+
+                        }
+
+                        @Override
+                        public void onError() {
+                            System.out.println("error");
+                            Picasso.with(context)
+                                    .load(profileImageUrl)
+                                    .into(ivProfileImage);
+                        }
+                    });
+
             tvTime.setText(getRelativeTimeAgo(tweet.getCreatedAt()));
         }
 
-        public String getRelativeTimeAgo(String rawJsonDate) {;
+        private String getRelativeTimeAgo(String rawJsonDate) {
             twitterDateFormat.setLenient(true);
 
             String relativeDate = "";
@@ -113,7 +123,4 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             return relativeDate;
         }
     }
-
-
-
 }
