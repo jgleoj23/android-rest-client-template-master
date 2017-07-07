@@ -7,4 +7,5 @@
     <string name="intent_host">cprest</string>
     <string name="homeTimelineSource">statuses/home_timeline.json</string>
     <string name="mentionsTimelineSource">statuses/mentions_timeline.json</string>
+    <string name="userTimelineSource">statuses/user_timeline.json</string>
 </resources>

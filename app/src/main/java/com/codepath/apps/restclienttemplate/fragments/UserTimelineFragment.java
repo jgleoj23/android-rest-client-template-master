@@ -12,13 +12,14 @@ import com.codepath.apps.restclienttemplate.TwitterApplication;
 /**
  * @author Joseph Gardi
  */
-public class HomeTimelineFragment extends Fragment {
+public class UserTimelineFragment extends Fragment {
 
     private String TAG = getClass().getName();
 
 //    @Inject
-//    @Named(homeSource)
+//    @Named(userSource)
 //    TimelineView timelineView;
+
 
 
     @Nullable

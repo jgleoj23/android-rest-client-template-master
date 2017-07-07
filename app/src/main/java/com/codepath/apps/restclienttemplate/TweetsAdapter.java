@@ -1,6 +1,7 @@
 package com.codepath.apps.restclienttemplate;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.util.Log;
@@ -10,8 +11,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.codepath.apps.restclienttemplate.activity.ProfileActivity;
 import com.codepath.apps.restclienttemplate.interactor.TimelineTweetsInteractor;
 import com.codepath.apps.restclienttemplate.model.Tweet;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
@@ -30,6 +34,7 @@ import butterknife.ButterKnife;
 public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder> {
 
     private final String TAG = getClass().getName();
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     private TimelineTweetsInteractor timelineTweetsInteractor;
     private SimpleDateFormat twitterDateFormat;
@@ -80,7 +85,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         }
 
 
-        private void bind(Tweet tweet) {
+        private void bind(final Tweet tweet) {
             Log.i(TAG, "binding " + tweet.getCreatedAt());
 
             tvUsername.setText(tweet.getUser().getName());
@@ -106,6 +111,20 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                     });
 
             tvTime.setText(getRelativeTimeAgo(tweet.getCreatedAt()));
+
+            ivProfileImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.i(TAG, "clicked user: " + tweet.getUser().getScreenName());
+                    Intent i = new Intent(context, ProfileActivity.class);
+                    try {
+                        i.putExtra("user", objectMapper.writeValueAsString(tweet.getUser()));
+                        context.startActivity(i);
+                    } catch (JsonProcessingException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
         }
 
         private String getRelativeTimeAgo(String rawJsonDate) {

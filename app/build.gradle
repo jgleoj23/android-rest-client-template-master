@@ -66,6 +66,12 @@ dependencies {
             [group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.0.pr4']
     )
 
+    compile group: 'io.reactivex.rxjava2', name: 'rxjava', version: '2.1.1'
+    compile group: 'io.reactivex.rxjava2', name: 'rxandroid', version: '2.0.1'
+
+
+
+    apt "com.github.Raizlabs.DBFlow:dbflow-processor:${dbflow_version}"
     compile 'com.codepath.libraries:android-oauth-handler:1.2.5'
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.loopj.android:android-async-http:1.4.9'
@@ -75,18 +81,14 @@ dependencies {
     compile 'com.jakewharton:butterknife:8.6.0'
     compile 'com.google.dagger:dagger:2.11'
     compile 'com.google.dagger:dagger-android:2.11'
-    compile group: 'io.reactivex.rxjava2', name: 'rxjava', version: '2.1.1'
-    compile group: 'io.reactivex.rxjava2', name: 'rxandroid', version: '2.0.1'
     compile 'com.google.guava:guava:22.0-android'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.squareup.okhttp:okhttp:2.4.0'
     compile 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.0.2'
-    compile "com.android.support:design:25.4.0"
-
+    compile 'org.parceler:parceler-api:1.1.9'
+    apt 'org.parceler:parceler:1.1.9'
+    compile 'com.android.support:design:25.4.0'
     apt 'com.google.dagger:dagger-compiler:2.11'
-
-    provided 'javax.annotation:jsr250-api:1.0'
-
     apt 'com.jakewharton:butterknife-compiler:8.6.0'
-    apt "com.github.Raizlabs.DBFlow:dbflow-processor:${dbflow_version}"
+    provided 'javax.annotation:jsr250-api:1.0'
 }

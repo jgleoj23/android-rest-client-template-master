@@ -22,7 +22,9 @@ public class User implements RealmModel {
     private String screenName;
     private String profileImageUrl;
     private boolean isCurrentUser;
-
+    private String description;
+    private int friendsCount;
+    private int followersCount;
 
     //region getters and setters
 
@@ -64,6 +66,30 @@ public class User implements RealmModel {
 
     public void setIsCurrentUser(boolean currentUser) {
         isCurrentUser = currentUser;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public int getFriendsCount() {
+        return friendsCount;
+    }
+
+    public void setFriendsCount(int friendsCount) {
+        this.friendsCount = friendsCount;
+    }
+
+    public int getFollowersCount() {
+        return followersCount;
+    }
+
+    public void setFollowersCount(int followersCount) {
+        this.followersCount = followersCount;
     }
 
     //endregion

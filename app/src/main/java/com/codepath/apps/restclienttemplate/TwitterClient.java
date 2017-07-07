@@ -1,8 +1,7 @@
-package com.codepath.apps.restclienttemplate.interactor;
+package com.codepath.apps.restclienttemplate;
 
 import android.content.Context;
 
-import com.codepath.apps.restclienttemplate.R;
 import com.codepath.oauth.OAuthBaseClient;
 import com.github.scribejava.apis.TwitterApi;
 import com.github.scribejava.core.builder.api.BaseApi;
@@ -22,7 +21,7 @@ import io.reactivex.annotations.NonNull;
  *
  * @author Joseph Gardi
  */
-public class TwitterClientInteractor extends OAuthBaseClient {
+public class TwitterClient extends OAuthBaseClient {
 
 	public static final BaseApi REST_API_INSTANCE = TwitterApi.instance(); // Change this
 	public static final String REST_URL = "https://api.twitter.com/1.1"; // Change this, base API URL
@@ -35,7 +34,7 @@ public class TwitterClientInteractor extends OAuthBaseClient {
     private final String TAG = getClass().getName();
 
 	@Inject
-	public TwitterClientInteractor(Context context) {
+	public TwitterClient(Context context) {
 		super(context, REST_API_INSTANCE,
 				REST_URL,
 				REST_CONSUMER_KEY,

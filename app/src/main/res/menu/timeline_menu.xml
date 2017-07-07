@@ -3,7 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item android:id="@+id/action_tweet"
-        app:showAsAction="always"
-        android:icon="@drawable/tweet"
-        android:title="Tweet" />
+          app:showAsAction="always"
+          android:icon="@drawable/tweet"
+          android:title="Tweet" />
+
+    <item
+        android:id="@+id/profile"
+        android:icon="@drawable/ic_vector_person"
+        android:title="Item"
+        app:showAsAction="always"/>
+
 </menu>

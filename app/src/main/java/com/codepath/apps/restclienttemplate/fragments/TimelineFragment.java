@@ -1,44 +1,67 @@
-package com.codepath.apps.restclienttemplate;
+package com.codepath.apps.restclienttemplate.fragments;
 
-import android.content.Context;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.widget.RelativeLayout;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.codepath.apps.restclienttemplate.EndlessRecyclerViewScrollListener;
+import com.codepath.apps.restclienttemplate.R;
+import com.codepath.apps.restclienttemplate.TweetsAdapter;
+import com.codepath.apps.restclienttemplate.TwitterApplication;
 import com.codepath.apps.restclienttemplate.interactor.TimelineTweetsInteractor;
+import com.google.common.base.Function;
 import com.google.common.collect.Range;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
 
-import static android.content.ContentValues.TAG;
 import static com.codepath.apps.restclienttemplate.StackPrinter.stackPrinter;
 
 /**
  * @author Joseph Gardi
  */
-public class TimelineView extends RelativeLayout {
+public class TimelineFragment extends Fragment {
+
+    private String TAG = getClass().getName();
 
     private TimelineTweetsInteractor timelineTweetsInteractor;
     private TweetsAdapter tweetsAdapter;
+
+    @Inject
+    Function<TimelineTweetsInteractor, TweetsAdapter> tweetsAdapterFactory;
 
     @BindView(R.id.swipeContainer)
     SwipeRefreshLayout swipeContainer;
     @BindView(R.id.rvTweets)
     RecyclerView rvTweets;
 
-    public TimelineView(Context context, final TweetsAdapter tweetsAdapter,
-                        final TimelineTweetsInteractor timelineTweetsInteractor) {
-        super(context);
-        this.timelineTweetsInteractor = timelineTweetsInteractor;
-        this.tweetsAdapter = tweetsAdapter;
-        inflate(context, R.layout.timeline, this);
-        ButterKnife.bind(this);
+
+    public static TimelineFragment newInstance(TimelineTweetsInteractor timelineTweetsInteractor) {
+        TimelineFragment fragment = new TimelineFragment();
+        fragment.timelineTweetsInteractor = timelineTweetsInteractor;
+        return fragment;
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        ((TwitterApplication) getActivity().getApplication()).getAppComponent().inject(this);
+        View view = inflater.inflate(R.layout.timeline, container, false);
+        ButterKnife.bind(this, view);
+
+        tweetsAdapter = tweetsAdapterFactory.apply(timelineTweetsInteractor);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         rvTweets.setLayoutManager(layoutManager);
@@ -54,7 +77,7 @@ public class TimelineView extends RelativeLayout {
         rvTweets.addOnScrollListener(new EndlessRecyclerViewScrollListener(layoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                Log.i(TAG, "loading more");
+                Log.i(TAG, "loading more: " + page);
                 timelineTweetsInteractor.getLoadOlderTweets().subscribe(new Consumer<Range<Integer>>() {
                     @Override
                     public void accept(@NonNull final Range<Integer> integerRange) throws Exception {
@@ -77,7 +100,17 @@ public class TimelineView extends RelativeLayout {
             }
         }, stackPrinter);
 
+        timelineTweetsInteractor.getPostedTweet().subscribe(new Consumer<Integer>() {
+            @Override
+            public void accept(@NonNull Integer position) throws Exception {
+                Log.i(TAG, "accepted");
+                tweetsAdapter.notifyItemInserted(0);
+            }
+        });
+
         loadTweets();
+
+        return view;
     }
 
 

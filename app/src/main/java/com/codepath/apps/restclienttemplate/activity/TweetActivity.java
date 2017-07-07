@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.codepath.apps.restclienttemplate.R;
 import com.codepath.apps.restclienttemplate.TwitterApplication;
-import com.codepath.apps.restclienttemplate.interactor.CurrentUserInteractor;
+import com.codepath.apps.restclienttemplate.interactor.UserInteractor;
 import com.codepath.apps.restclienttemplate.interactor.PostTweetInteractor;
 import com.codepath.apps.restclienttemplate.model.User;
 import com.squareup.picasso.Picasso;
@@ -40,7 +40,7 @@ public class TweetActivity extends AppCompatActivity {
     @Inject
     PostTweetInteractor postTweetInteractor;
     @Inject
-    CurrentUserInteractor currentUserInteractor;
+    UserInteractor userInteractor;
 
 
     @Override
@@ -58,7 +58,7 @@ public class TweetActivity extends AppCompatActivity {
         setContentView(R.layout.activity_tweet);
         ButterKnife.bind(this);
 
-        currentUserInteractor.getUser().subscribe(new Consumer<User>() {
+        userInteractor.getUser().subscribe(new Consumer<User>() {
             @Override
             public void accept(@NonNull User user) throws Exception {
                 Picasso.with(getApplicationContext())

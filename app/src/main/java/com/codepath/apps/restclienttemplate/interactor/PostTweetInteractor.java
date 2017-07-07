@@ -1,5 +1,6 @@
 package com.codepath.apps.restclienttemplate.interactor;
 
+import com.codepath.apps.restclienttemplate.TwitterClient;
 import com.codepath.apps.restclienttemplate.model.Tweet;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.loopj.android.http.RequestParams;
@@ -17,13 +18,13 @@ public class PostTweetInteractor {
 
     private String TAG = getClass().getName();
 
-    private TwitterClientInteractor twitterClient;
+    private TwitterClient twitterClient;
     private TimelineTweetsInteractor timelineTweetsInteractor;
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
     @Inject
-    public PostTweetInteractor(TwitterClientInteractor twitterClient, TimelineTweetsInteractor timelineTweetsInteractor) {
+    public PostTweetInteractor(TwitterClient twitterClient, TimelineTweetsInteractor timelineTweetsInteractor) {
         this.twitterClient = twitterClient;
         this.timelineTweetsInteractor = timelineTweetsInteractor;
     }
@@ -37,7 +38,7 @@ public class PostTweetInteractor {
             @Override
             public Tweet apply(@NonNull String response) throws Exception {
                 final Tweet tweet = objectMapper.readValue(response.toString(), Tweet.class);
-                timelineTweetsInteractor.savePostedTweet(tweet, 0);
+                timelineTweetsInteractor.savePostedTweet(tweet);
                 return tweet;
             }
         })
